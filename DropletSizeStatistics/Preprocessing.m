@@ -3,7 +3,7 @@
 %--------------------------------------------------------------------------
 %IMAGE LOADING AND TYPE CONVERSION
 %--------------------------------------------------------------------------
-img = imread('1.tif'); %  Please fill in file name as 'xxxx.tif'.
+img = imread(''); %  Please fill in file name as 'xxxx.tif'.
 if(size(img,3)==3)
     % Convert RGB to grayscale.
     grayimg = rgb2gray(img);
@@ -19,11 +19,11 @@ RadiusWindow = [DiamtrPixelLlim DiamtrPixelUlim]/2;
 %PRE-PROCESSING
 %--------------------------------------------------------------------------
 % Step #1: Contrast enhancement.
-%imshow(grayimg)
-%imcontrast %  Manually adjust contrast and remember the Max and Min.
+imshow(grayimg)
+imcontrast %  Manually adjust contrast and remember the Max and Min.
 %{
-lowerlim = 100; %  Please fill in the lower and upper limits you choose 
-upperlim = 180; %  in the Adjust Contrast GUI.
+lowerlim = ; %  Please fill in the lower and upper limits you choose 
+upperlim = ; %  in the Adjust Contrast GUI.
 contraimg = imadjust(grayimg, [lowerlim upperlim]/255, []);
 %}
 
@@ -38,7 +38,7 @@ viscircles(centers,rawradii);
 %--------------------------------------------------------------------------
 % Step #2: Edge detection using 'log' method
 %edgeimg = edge(contraimg, 'log'); %  edge detection. WARNING: output
-                                     %  image format is LOGICAL.
+                                   %  image format is LOGICAL.
 %--------Checkpoint--------
 %{
 figure
@@ -56,7 +56,9 @@ blurimg = imgaussfilt(uint8img,1,'FilterSize',7);
 %  The second argument is Standard deviation of the Gaussian distribution,  
 %  default value = 0.5; the Name-Value Pair 'FilterSize' specifies the size
 %  of the filter, default value = 2 (square), you can change to another 
-%  uint scalar or a 2-element vector [M N]
+%  uint scalar or a 2-element vector [M N].
+%  2020-11-19 It turned out that this filter may be harmful to imfindcircle
+%  proper functioning, though I don't know why.
 
 %--------Checkpoint--------
 %{
@@ -65,5 +67,3 @@ imshow(blurimg)
 [centers,rawradii] = imfindcircles(blurimg, RadiusWindow);
 viscircles(centers,rawradii);
 %}
-
-
