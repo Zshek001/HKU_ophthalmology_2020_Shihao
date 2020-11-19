@@ -1,25 +1,29 @@
-%A scripts for acquiring parameters to be used in BatchCircleFinder.
+%A scripts for acquiring parameters to be used in the preprocessing part of BatchCircleFinder.
 
 %--------------------------------------------------------------------------
 %IMAGE LOADING AND TYPE CONVERSION
 %--------------------------------------------------------------------------
-img = imread(''); %  Please fill in file name as 'xxxx.tif'.
+img = imread('1.tif'); %  Please fill in file name as 'xxxx.tif'.
 if(size(img,3)==3)
-    % Convert RGB to grayscale
+    % Convert RGB to grayscale.
     grayimg = rgb2gray(img);
 else
     grayimg = img;
 end
 
+DiamtrPixelLlim = ; %  Please fill in diameter, measured in the
+DiamtrPixelUlim = ; %  DiameterEstimation module.
+RadiusWindow = [DiamtrPixelLlim DiamtrPixelUlim]/2;
+
 %--------------------------------------------------------------------------
 %PRE-PROCESSING
 %--------------------------------------------------------------------------
 % Step #1: Contrast enhancement.
-imshow(grayimg)
-imcontrast %  Manually adjust contrast and remember the Max and Min.
+%imshow(grayimg)
+%imcontrast %  Manually adjust contrast and remember the Max and Min.
 %{
-lowerlim = ; %  Please fill in the lower and upper limits that you choose 
-upperlim = ; %  in the Adjust Contrast GUI.
+lowerlim = 100; %  Please fill in the lower and upper limits you choose 
+upperlim = 180; %  in the Adjust Contrast GUI.
 contraimg = imadjust(grayimg, [lowerlim upperlim]/255, []);
 %}
 
@@ -27,23 +31,27 @@ contraimg = imadjust(grayimg, [lowerlim upperlim]/255, []);
 %{
 figure
 imshow(contraimg)
+[centers,rawradii] = imfindcircles(contraimg, RadiusWindow);
+viscircles(centers,rawradii);
 %}
 
 %--------------------------------------------------------------------------
-% Step #2: Edge detection using Canny method
-%edgeimg = edge(contraimg, 'Canny'); %  edge detection. WARNING: output
+% Step #2: Edge detection using 'log' method
+%edgeimg = edge(contraimg, 'log'); %  edge detection. WARNING: output
                                      %  image format is LOGICAL.
 %--------Checkpoint--------
 %{
 figure
 imshow(edgeimg)
+[centers,rawradii] = imfindcircles(edgeimg, RadiusWindow);
+viscircles(centers,rawradii);
 %}
 
 %--------------------------------------------------------------------------
-% Step #3: Blurring using Gaussian filter to reduce noise
+% (Optional)Step #3: Blurring using Gaussian filter to reduce noise
 %{
 uint8img = im2uint8(edgeimg); % Convert from logical to uint8
-blurimg = imgaussfilt(uint8img,0.5,'FilterSize',2);
+blurimg = imgaussfilt(uint8img,1,'FilterSize',7);
 %}
 %  The second argument is Standard deviation of the Gaussian distribution,  
 %  default value = 0.5; the Name-Value Pair 'FilterSize' specifies the size
@@ -54,28 +62,8 @@ blurimg = imgaussfilt(uint8img,0.5,'FilterSize',2);
 %{
 figure
 imshow(blurimg)
+[centers,rawradii] = imfindcircles(blurimg, RadiusWindow);
+viscircles(centers,rawradii);
 %}
 
-%--------------------------------------------------------------------------
-%DIAMETER RANGE MEASUREMENT
-%--------------------------------------------------------------------------
-%{
-figure
-imshow(blurimg)
 
-d = drawline; %  Then DIRECTLY draw a line to the SMALLEST circle WANTED
-              %  within one click.
-pos = d.Position;
-diffPos = diff(pos);
-rawDiamtrPixelLlim = hypot(diffPos(1),diffPos(2))
-
-hold on
-
-d = drawline; %  Then DIRECTLY draw a line to the BIGGEST circle WANTED
-              %  within one click.
-pos = d.Position;
-diffPos = diff(pos);
-rawDiamtrPixelUlim = hypot(diffPos(1),diffPos(2))
-
-hold off
-%}
