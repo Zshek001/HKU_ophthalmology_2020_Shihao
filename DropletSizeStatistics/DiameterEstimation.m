@@ -3,7 +3,7 @@
 %--------------------------------------------------------------------------
 %IMAGE LOADING AND TYPE CONVERSION
 %--------------------------------------------------------------------------
-img = imread('1.tif'); %  Please fill in file name as 'xxxx.tif'.
+img = imread(''); %  Please fill in file name as 'xxxx.tif'.
 if(size(img,3)==3)
     % Convert RGB to grayscale
     grayimg = rgb2gray(img);
