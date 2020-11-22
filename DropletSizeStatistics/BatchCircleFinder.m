@@ -6,11 +6,11 @@ function results = BatchCircleFinder(img)
 %--------------------------------------------------------------------------
 %IMG      - Input image.
 %RESULTS - A scalar structure with the processing results.
-contralowerlim = 100; %  Please fill in values you've chosen in 
-contraupperlim = 200; %  Preprocessing.m.
-ContrastWindow = [contralowerlim contraupperlim]/255;
-DiamtrPixelLlim = 20; %  Please fill in values; reference raw data were 
-DiamtrPixelUlim = 150; %  measured in Preprocessing.m.
+%contralowerlim = 190; %  Please fill in values you've chosen in 
+%contraupperlim = 240; %  Preprocessing.m.
+%ContrastWindow = [contralowerlim contraupperlim]/255;
+DiamtrPixelLlim = 14; %  Please fill in values; reference raw data were 
+DiamtrPixelUlim = 240; %  measured in Preprocessing.m.
 RadiusWindow = [DiamtrPixelLlim DiamtrPixelUlim]/2;
 DeltaRadius = -2; %  Manual correction of the detected radius in pixels.
 scalebarlength = 100; %  Please fill in physical length of scale bar, in
@@ -31,8 +31,8 @@ end
 %--------------------------------------------------------------------------
 %PRE-PROCESSING
 %--------------------------------------------------------------------------
-contraimg = imadjust(grayimg, ContrastWindow, []); %  Contrast enhancement.
-edgeimg = edge(contraimg, 'log'); %  Edge detection.
+%contraimg = imadjust(grayimg, ContrastWindow, []); %  Contrast enhancement.
+edgeimg = edge(grayimg, 'log'); %  Edge detection.
 %uint8img = im2uint8(edgeimg); %  Convert from logical to uint8
 %blurimg = imgaussfilt(uint8img); %  Blurring
 %blurimg = imfilter(uint8img, ones(3)/9);
@@ -40,7 +40,7 @@ edgeimg = edge(contraimg, 'log'); %  Edge detection.
 %--------------------------------------------------------------------------
 %CIRCLE DETECTION
 %--------------------------------------------------------------------------
-[centers,rawradii] = imfindcircles(edgeimg, RadiusWindow);
+[centers,rawradii] = imfindcircles(edgeimg, RadiusWindow, 'Sensitivity', 0.75);
 radii = rawradii + DeltaRadius;
 circledimg = insertShape(img,'Circle',[centers radii],'LineWidth',2,...
     'Color','red', 'Opacity',0.1);
