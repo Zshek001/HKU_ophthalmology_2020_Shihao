@@ -18,9 +18,9 @@ RadiusWindow = [DiamtrPixelLlim DiamtrPixelUlim]/2;
 %--------------------------------------------------------------------------
 %PRE-PROCESSING
 %--------------------------------------------------------------------------
-% Step #1: Contrast enhancement.
-imshow(grayimg)
-imcontrast %  Manually adjust contrast and remember the Max and Min.
+% (Optional)Step #1: Contrast enhancement.
+%imshow(grayimg)
+%imcontrast %  Manually adjust contrast and remember the Max and Min.
 %{
 lowerlim = ; %  Please fill in the lower and upper limits you choose 
 upperlim = ; %  in the Adjust Contrast GUI.
@@ -37,7 +37,7 @@ viscircles(centers,rawradii);
 
 %--------------------------------------------------------------------------
 % Step #2: Edge detection using 'log' method
-%edgeimg = edge(contraimg, 'log'); %  edge detection. WARNING: output
+edgeimg = edge(grayimg, 'log'); %  edge detection. WARNING: output
                                    %  image format is LOGICAL.
 %--------Checkpoint--------
 %{
