@@ -12,10 +12,10 @@ function results = BatchCircleFinder(img)
 DiamtrPixelLlim = 14; %  Please fill in values; reference raw data were 
 DiamtrPixelUlim = 240; %  measured in Preprocessing.m.
 RadiusWindow = [DiamtrPixelLlim DiamtrPixelUlim]/2;
-DeltaRadius = -2; %  Manual correction of the detected radius in pixels.
+DeltaRadius = -1; %  Manual correction of the detected radius in pixels.
 scalebarlength = 100; %  Please fill in physical length of scale bar, in
                       %  micrometers.
-scalebarpixels = 20; %  Please fill in length of scale bar in pixels.
+scalebarpixels = 113.67; %  Please fill in length of scale bar in pixels.
 PixelperScalebar = scalebarpixels/scalebarlength;
 
 
